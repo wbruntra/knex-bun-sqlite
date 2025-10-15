@@ -1,6 +1,6 @@
 {
   "name": "knex-bun-sqlite",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Use Bun's native high-performance SQLite driver (bun:sqlite) with Knex.js - 3-6x faster than node-sqlite3",
   "main": "index.js",
   "types": "index.d.ts",
