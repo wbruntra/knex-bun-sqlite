@@ -1,0 +1,51 @@
+{
+  "name": "knex-bun-sqlite",
+  "version": "1.0.0",
+  "description": "Use Bun's native high-performance SQLite driver (bun:sqlite) with Knex.js - 3-6x faster than node-sqlite3",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "scripts": {
+    "test": "bun test",
+    "prepublishOnly": "echo 'Ready to publish knex-bun-sqlite'"
+  },
+  "keywords": [
+    "knex",
+    "bun",
+    "sqlite",
+    "sqlite3",
+    "bun:sqlite",
+    "database",
+    "sql",
+    "query-builder",
+    "adapter",
+    "driver",
+    "performance",
+    "fast"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wbruntra/knex-bun-sqlite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wbruntra/knex-bun-sqlite/issues"
+  },
+  "homepage": "https://github.com/wbruntra/knex-bun-sqlite#readme",
+  "peerDependencies": {
+    "knex": ">=2.0.0"
+  },
+  "devDependencies": {
+    "knex": "^3.1.0"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE",
+    "examples/"
+  ]
+}

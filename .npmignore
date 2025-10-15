@@ -1,0 +1,33 @@
+# Exclude development files from npm package
+node_modules/
+*.sqlite
+*.sqlite3
+*.db
+
+# Development
+.git/
+.gitignore
+.vscode/
+.idea/
+*.log
+*.swp
+*.swo
+
+# Test files
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Build artifacts
+dist/
+build/
+*.tgz
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.md~
+.npmrc
