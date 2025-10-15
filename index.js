@@ -12,6 +12,28 @@ try {
   console.warn('Could not load Knex SQLite3 client, using standalone adapter')
 }
 
+// Helper function to normalize parameters for bun:sqlite
+// Converts Date objects and other unsupported types to SQLite-compatible values
+function normalizeParams(params) {
+  if (!Array.isArray(params)) {
+    params = params === undefined ? [] : [params]
+  }
+  
+  return params.map(param => {
+    if (param instanceof Date) {
+      // Convert Date to SQLite datetime format: 'YYYY-MM-DD HH:MM:SS.SSS'
+      return param.toISOString().replace('T', ' ').substring(0, 23)
+    } else if (param === undefined) {
+      // Convert undefined to null for SQLite
+      return null
+    } else if (Buffer.isBuffer(param)) {
+      // Convert Buffer to Uint8Array which bun:sqlite accepts
+      return new Uint8Array(param)
+    }
+    return param
+  })
+}
+
 class Database {
   constructor(filename, mode, callback) {
     // Handle different constructor signatures
@@ -68,8 +90,9 @@ class Database {
         params = []
       }
       
+      const normalizedParams = normalizeParams(params)
       const stmt = this.db.prepare(sql)
-      const result = stmt.run(...(Array.isArray(params) ? params : [params]))
+      const result = stmt.run(...normalizedParams)
       stmt.finalize()
       
       if (callback) {
@@ -96,8 +119,9 @@ class Database {
         params = []
       }
       
+      const normalizedParams = normalizeParams(params)
       const stmt = this.db.prepare(sql)
-      const result = stmt.get(...(Array.isArray(params) ? params : [params]))
+      const result = stmt.get(...normalizedParams)
       stmt.finalize()
       
       if (callback) {
@@ -120,8 +144,9 @@ class Database {
         params = []
       }
       
+      const normalizedParams = normalizeParams(params)
       const stmt = this.db.prepare(sql)
-      const results = stmt.all(...(Array.isArray(params) ? params : [params]))
+      const results = stmt.all(...normalizedParams)
       stmt.finalize()
       
       if (callback) {
@@ -146,8 +171,9 @@ class Database {
         params = []
       }
       
+      const normalizedParams = normalizeParams(params)
       const stmt = this.db.prepare(sql)
-      const results = stmt.all(...(Array.isArray(params) ? params : [params]))
+      const results = stmt.all(...normalizedParams)
       stmt.finalize()
       
       let count = 0
@@ -251,7 +277,8 @@ class Statement {
     }
     
     try {
-      const result = this.stmt.run(...params)
+      const normalizedParams = normalizeParams(params)
+      const result = this.stmt.run(...normalizedParams)
       if (callback) {
         const context = {
           lastID: result.lastInsertRowid ? Number(result.lastInsertRowid) : undefined,
@@ -283,7 +310,8 @@ class Statement {
     }
     
     try {
-      const result = this.stmt.get(...params)
+      const normalizedParams = normalizeParams(params)
+      const result = this.stmt.get(...normalizedParams)
       if (callback) {
         callback.call(this, null, result)
       }
@@ -311,7 +339,8 @@ class Statement {
     }
     
     try {
-      const results = this.stmt.all(...params)
+      const normalizedParams = normalizeParams(params)
+      const results = this.stmt.all(...normalizedParams)
       if (callback) {
         callback.call(this, null, results)
       }
@@ -348,7 +377,8 @@ class Statement {
     }
     
     try {
-      const results = this.stmt.all(...params)
+      const normalizedParams = normalizeParams(params)
+      const results = this.stmt.all(...normalizedParams)
       let count = 0
       
       for (const row of results) {

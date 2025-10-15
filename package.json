@@ -8,8 +8,15 @@
     "bun": ">=1.0.0"
   },
   "scripts": {
-    "test": "bun test",
-    "prepublishOnly": "echo 'Ready to publish knex-bun-sqlite'"
+    "test": "bun tests/run-tests.js",
+    "test:dates": "bun tests/test-dates.js",
+    "test:migrations": "bun tests/test-migrations.js",
+    "test:types": "bun tests/test-parameter-types.js",
+    "prepublishOnly": "bun tests/run-tests.js",
+    "migrate:make": "bun migrate.ts make",
+    "migrate:latest": "bun migrate.ts latest",
+    "migrate:rollback": "bun migrate.ts rollback",
+    "migrate:status": "bun migrate.ts status"
   },
   "keywords": [
     "knex",
