@@ -102,9 +102,10 @@ async function runTests() {
     })
     const retrieved = await db('events').where('id', id4).first()
     console.log(`✅ Stored: ${preciseDate.toISOString()}`)
-    console.log(`✅ Retrieved: ${retrieved.event_date}`)
-    // Check if milliseconds are preserved (SQLite stores as string)
-    if (retrieved.event_date.includes('.123')) {
+    console.log(`✅ Retrieved: ${retrieved.event_date} (Unix timestamp)`)
+    // Check if milliseconds are preserved (stored as Unix timestamp)
+    const retrievedDate = new Date(retrieved.event_date)
+    if (retrievedDate.getTime() === preciseDate.getTime()) {
       console.log('✅ Millisecond precision preserved!')
     } else {
       console.log('⚠️  Millisecond precision may be truncated')

@@ -21,8 +21,9 @@ function normalizeParams(params) {
   
   return params.map(param => {
     if (param instanceof Date) {
-      // Convert Date to SQLite datetime format: 'YYYY-MM-DD HH:MM:SS.SSS'
-      return param.toISOString().replace('T', ' ').substring(0, 23)
+      // Convert Date to Unix timestamp (milliseconds) to match sqlite3 behavior
+      // sqlite3 stores dates as integers and returns them as numbers
+      return param.valueOf()
     } else if (param === undefined) {
       // Convert undefined to null for SQLite
       return null

@@ -1,23 +1,33 @@
 {
   "name": "knex-bun-sqlite",
   "version": "1.1.0",
-  "description": "Use Bun's native high-performance SQLite driver (bun:sqlite) with Knex.js - 3-6x faster than node-sqlite3",
+  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wbruntra/knex-bun-sqlite.git"
+  },
   "main": "index.js",
-  "types": "index.d.ts",
+  "devDependencies": {
+    "knex": "^3.1.0"
+  },
+  "peerDependencies": {
+    "knex": ">=2.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/wbruntra/knex-bun-sqlite/issues"
+  },
+  "description": "Use Bun's native high-performance SQLite driver (bun:sqlite) with Knex.js - 3-6x faster than node-sqlite3",
   "engines": {
     "bun": ">=1.0.0"
   },
-  "scripts": {
-    "test": "bun tests/run-tests.js",
-    "test:dates": "bun tests/test-dates.js",
-    "test:migrations": "bun tests/test-migrations.js",
-    "test:types": "bun tests/test-parameter-types.js",
-    "prepublishOnly": "bun tests/run-tests.js",
-    "migrate:make": "bun migrate.ts make",
-    "migrate:latest": "bun migrate.ts latest",
-    "migrate:rollback": "bun migrate.ts rollback",
-    "migrate:status": "bun migrate.ts status"
-  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE",
+    "examples/"
+  ],
+  "homepage": "https://github.com/wbruntra/knex-bun-sqlite#readme",
   "keywords": [
     "knex",
     "bun",
@@ -32,27 +42,17 @@
     "performance",
     "fast"
   ],
-  "author": "",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wbruntra/knex-bun-sqlite.git"
+  "scripts": {
+    "test": "bun tests/run-tests.js",
+    "test:dates": "bun tests/test-dates.js",
+    "test:migrations": "bun tests/test-migrations.js",
+    "test:types": "bun tests/test-parameter-types.js",
+    "prepublishOnly": "bun tests/run-tests.js",
+    "migrate:make": "bun migrate.ts make",
+    "migrate:latest": "bun migrate.ts latest",
+    "migrate:rollback": "bun migrate.ts rollback",
+    "migrate:status": "bun migrate.ts status"
   },
-  "bugs": {
-    "url": "https://github.com/wbruntra/knex-bun-sqlite/issues"
-  },
-  "homepage": "https://github.com/wbruntra/knex-bun-sqlite#readme",
-  "peerDependencies": {
-    "knex": ">=2.0.0"
-  },
-  "devDependencies": {
-    "knex": "^3.1.0"
-  },
-  "files": [
-    "index.js",
-    "index.d.ts",
-    "README.md",
-    "LICENSE",
-    "examples/"
-  ]
+  "types": "index.d.ts"
 }
