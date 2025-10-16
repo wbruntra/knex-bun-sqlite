@@ -21,7 +21,32 @@ bun add knex-bun-sqlite knex
 
 ## Quick Start
 
-### Method 1: Direct Client Usage (Recommended ⭐)
+### Method 1: Reusable Database Module (Recommended ⭐)
+
+Create a reusable database module for your application - this is the best practice:
+
+```javascript
+// db.js
+const knex = require('knex')({
+  client: require('knex-bun-sqlite'),  // Clean and simple!
+  connection: { filename: './mydb.sqlite' },
+  useNullAsDefault: true
+})
+
+module.exports = knex
+```
+
+Then in your app:
+
+```javascript
+const db = require('./db')
+
+// Use Knex normally
+const movies = await db('movies').where('year', '>', 2000).select('*')
+await db.destroy()
+```
+
+### Method 2: Direct Client Usage
 
 Simply pass the client directly to Knex - no module interception needed!
 
@@ -44,7 +69,7 @@ async function example() {
 example()
 ```
 
-### Method 2: Module Interception (Alternative)
+### Method 3: Module Interception (Alternative)
 
 If you prefer, you can also use module interception to replace `sqlite3` automatically:
 
@@ -81,31 +106,6 @@ async function example() {
 example()
 ```
 
-### Method 3: Reusable Database Module (Best Practice ⭐)
-
-Create a reusable database module:
-
-```javascript
-// db.js
-const knex = require('knex')({
-  client: require('knex-bun-sqlite'),  // Clean and simple!
-  connection: { filename: './mydb.sqlite' },
-  useNullAsDefault: true
-})
-
-module.exports = knex
-```
-
-Then in your app:
-
-```javascript
-const db = require('./db')
-
-// Use Knex normally
-const movies = await db('movies').where('year', '>', 2000).select('*')
-await db.destroy()
-```
-
 ## Features
 
 All Knex operations are fully supported:
@@ -113,11 +113,11 @@ All Knex operations are fully supported:
 - ✅ SELECT queries with WHERE, JOIN, ORDER BY, LIMIT, etc.
 - ✅ INSERT, UPDATE, DELETE operations
 - ✅ Transactions
-- ✅ Schema migrations
 - ✅ Query builder methods
 - ✅ Raw queries
 - ✅ Connection pooling
 - ✅ Proper cleanup with `.destroy()`
+- ✅ Schema migrations (via SQLite3 in knexfile for CLI, bun:sqlite in your app)
 
 ## Examples
 
@@ -152,11 +152,13 @@ await db.destroy()
 
 ### Migrations
 
+For **Knex CLI migrations** (running `bun knex migrate:latest`), use SQLite3 in your knexfile since Knex itself will invoke the SQLite driver:
+
 ```javascript
-// knexfile.js
+// knexfile.js - For Knex CLI migrations
 module.exports = {
   development: {
-    client: require('knex-bun-sqlite'),  // Direct client usage!
+    client: 'sqlite3',  // Use standard sqlite3 for CLI
     connection: {
       filename: './dev.sqlite3'
     },
@@ -165,13 +167,39 @@ module.exports = {
 }
 ```
 
-Migrations work perfectly:
+Then run migrations with Knex:
 
 ```bash
-bun knex migrate:latest
-bun knex migrate:rollback
-bun knex seed:run
+knex migrate:latest
+knex migrate:rollback
+knex seed:run
 ```
+
+For your **application code**, use the reusable database module with `knex-bun-sqlite` (as shown in Method 1) to get the performance benefits of `bun:sqlite` while using the same database:
+
+```javascript
+// db.js - Your application's database connection
+const knex = require('knex')({
+  client: require('knex-bun-sqlite'),  // Use bun:sqlite for speed!
+  connection: { filename: './dev.sqlite3' },
+  useNullAsDefault: true
+})
+
+module.exports = knex
+```
+
+This gives you the best of both worlds: organized migrations with Knex CLI, and blazing-fast queries in your app!
+
+#### Important: Why Not Use `knex-bun-sqlite` in knexfile.js?
+
+When you run `bun knex migrate:latest` or any Knex CLI command, Knex ignores Bun's runtime and invokes Node.js directly to load and execute the migration code. This means:
+
+- ❌ `knex-bun-sqlite` won't work in your knexfile.js (requires `bun:sqlite`, which Node.js doesn't have)
+- ❌ You'll get an error: "Cannot find module 'bun:sqlite'"
+- ✅ Use standard `sqlite3` in knexfile.js for CLI commands
+- ✅ Use `knex-bun-sqlite` in your application code (via `db.js`) for the speed benefits
+
+This is why we recommend the two-pronged approach: SQLite3 for migrations, `knex-bun-sqlite` for queries!
 
 ### Transactions
 
