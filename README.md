@@ -46,30 +46,7 @@ const movies = await db('movies').where('year', '>', 2000).select('*')
 await db.destroy()
 ```
 
-### Method 2: Direct Client Usage
-
-Simply pass the client directly to Knex - no module interception needed!
-
-```javascript
-const knex = require('knex')({
-  client: require('knex-bun-sqlite'),  // That's it!
-  connection: {
-    filename: './mydb.sqlite'
-  },
-  useNullAsDefault: true
-})
-
-// Use Knex normally
-async function example() {
-  const users = await knex('users').select('*')
-  console.log(users)
-  await knex.destroy()
-}
-
-example()
-```
-
-### Method 3: Module Interception (Alternative)
+### Method 2: Module Interception (Alternative)
 
 If you prefer, you can also use module interception to replace `sqlite3` automatically:
 
